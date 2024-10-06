@@ -17,13 +17,13 @@ class Transcription:
         content (str): The content of the transcription.
         audio (str): The path to the original recording.
         timestamp (datetime.datetime): The time the transcription was created.
-        id (Union[Unset, str]): Unique identifier for the transcription.
+        id (Union[Unset, int]): The unique identifier for the Transcription
     """
 
     content: str
     audio: str
     timestamp: datetime.datetime
-    id: Union[Unset, str] = UNSET
+    id: Union[Unset, int] = UNSET
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:

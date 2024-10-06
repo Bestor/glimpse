@@ -6,21 +6,22 @@ import json
 from datetime import datetime, timezone
 from glimpse_api_client.glimpse_api_client import Client, models
 from glimpse_api_client.glimpse_api_client.api.default import post_events
+from glimpse_api_client.glimpse_api_client.api.default import get_transcriptions
 
 import time
+import os
 import requests
 
-API_ENDPOINT = "localhost:8080/transcriptions"  # Replace with your API URL
 POLLING_INTERVAL = 10 # Time in seconds between each poll
 
 
-def fetch_transcriptions():
-    try:
-        return API().get_transcriptions()
-    
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching events: {e}")
-        return None
+def fetch_transcriptions(client):
+        response = get_transcriptions.sync_detailed(
+            client=client,
+        )
+        if response.status_code != 200:
+            raise Exception(f"Error: {response.status_code} - {response.content}")
+        return response.parsed
     
 def get_latest_trancription(transcriptions):
     #return transcriptions[-1]
@@ -37,7 +38,7 @@ TRANSCRIPTION_BATCH_SIZE = 200
 def main(args):
     config = load_config(args.config_path)
 
-    client = Client(base_url="http://localhost:8080")
+    client = Client(base_url=os.environ["API_URL"])
 
     last_transcription_processed = models.Transcription(content="DUMMY", audio="", timestamp=datetime(1970, 1, 1, 0, 0, 0, tzinfo=timezone.utc))
     current_block_to_check = ""
@@ -46,7 +47,7 @@ def main(args):
     event = NEW_EVENT
     while True:
         print("Checking for new transcriptions...")
-        transcriptions = fetch_transcriptions()
+        transcriptions = fetch_transcriptions(client)
 
         # newest_transcription = get_latest_trancription(transcriptions=transcriptions)
         # process_transcription(newest_transcription, config)
@@ -77,7 +78,7 @@ def main(args):
                             client=client,
                             body=event
                         )
-                        print(f"RESPONSE: {event.transcriptions}")
+                        print(f"RESPONSE: {response}")
                         event = NEW_EVENT
 
                     current_block_to_check = ""

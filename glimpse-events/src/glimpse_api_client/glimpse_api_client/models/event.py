@@ -21,14 +21,14 @@ class Event:
     Attributes:
         description (str): A description of the event.
         timestamp (datetime.datetime): The time the event occurred.
-        id (Union[Unset, str]): Unique identifier for the event.
+        id (Union[Unset, int]): The unique identifier for the event
         location (Union[Unset, Location]):
         transcriptions (Union[Unset, List['Transcription']]):
     """
 
     description: str
     timestamp: datetime.datetime
-    id: Union[Unset, str] = UNSET
+    id: Union[Unset, int] = UNSET
     location: Union[Unset, "Location"] = UNSET
     transcriptions: Union[Unset, List["Transcription"]] = UNSET
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)

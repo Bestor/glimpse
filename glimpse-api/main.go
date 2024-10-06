@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"log"
@@ -108,7 +107,6 @@ func (s *Server) GetEvents(w http.ResponseWriter, r *http.Request) {
 		}
 
 		transcriptionList := []api.Transcription{}
-		fmt.Println("HERE6", event.Transcriptions)
 
 		for _, transcription := range event.Transcriptions {
 			apiTranscription := api.Transcription{
@@ -130,14 +128,11 @@ func (s *Server) GetEvents(w http.ResponseWriter, r *http.Request) {
 
 // Handler for POST /events
 func (s *Server) AddEvent(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("HERE1", r.Body)
-
 	var event api.Event
 	if err := json.NewDecoder(r.Body).Decode(&event); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	fmt.Println("HERE2", event.Transcriptions)
 	var location db.Location
 	if event.Location == nil {
 		location = db.Location{}
@@ -154,16 +149,13 @@ func (s *Server) AddEvent(w http.ResponseWriter, r *http.Request) {
 		Transcriptions: []db.Transcription{},
 		Location:       location,
 	}
-	fmt.Println("HERE3")
 	for _, transcription := range *event.Transcriptions {
-		fmt.Println("HERE4", transcription)
 		dbEvent.Transcriptions = append(dbEvent.Transcriptions, db.Transcription{
 			Audio:     transcription.Audio,
 			Content:   transcription.Content,
 			Timestamp: transcription.Timestamp,
 		})
 	}
-	fmt.Println("HERE5", dbEvent.Transcriptions)
 
 	result := s.DB.Create(&dbEvent)
 	if result.Error != nil {

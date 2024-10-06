@@ -1,17 +1,16 @@
 services:
-  listener:
-    build: ./glimpse-listener
-    command: /glimpse-listener/src/main.py
-    #command: -c "import time; time.sleep(1000000000)"
+  tooling:
+    build: ./
+    command: -c "import time; time.sleep(1000000000)"
     entrypoint: python
     env_file:
       - .env
-    working_dir: /glimpse-listener
+    working_dir: /glimpse
     volumes:
-      - ./glimpse-listener:/glimpse-listener
-      - ./.cache/whisper/:/root/.cache/whisper/
+      - ./:/glimpse
     networks:
       - glimpse
+
   api:
     build: ./glimpse-api
     command: run main.go
@@ -25,7 +24,65 @@ services:
       - "8080:8080"
     networks:
       - glimpse
+    healthcheck:
+      test: "curl --fail http://api:8080/events"
+      interval: 40s
+      timeout: 30s
+      retries: 3
+      start_period: 40s
 
+  ui:
+    build: ./glimpse-ui
+    command: http-server
+    #command: -c "import time; time.sleep(1000000000)"
+    entrypoint: npx
+    env_file:
+      - .env
+    working_dir: /glimpse-ui
+    volumes:
+      - ./glimpse-ui:/glimpse-ui
+      - ./.cache/whisper/:/root/.cache/whisper/
+    ports:
+      - "8081:8080"
+    networks:
+      - glimpse
+    depends_on:
+      api:
+        condition: service_healthy
+
+  listener:
+    build: ./glimpse-listener
+    command: /glimpse-listener/src/main.py
+    #command: -c "import time; time.sleep(1000000000)"
+    entrypoint: python
+    env_file:
+      - .env
+    working_dir: /glimpse-listener
+    volumes:
+      - ./glimpse-listener:/glimpse-listener
+      - ./.cache/whisper/:/root/.cache/whisper/
+    networks:
+      - glimpse
+    depends_on:
+      api:
+        condition: service_healthy
+
+  events:
+    build: ./glimpse-events
+    command: /glimpse-events/src/main.py
+    #command: -c "import time; time.sleep(1000000000)"
+    entrypoint: python
+    env_file:
+      - .env
+    working_dir: /glimpse-events
+    volumes:
+      - ./glimpse-events:/glimpse-events
+      - ./.cache/whisper/:/root/.cache/whisper/
+    networks:
+      - glimpse
+    depends_on:
+      api:
+        condition: service_healthy
 networks:
   glimpse:
     name: glimpse

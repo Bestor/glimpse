@@ -29,9 +29,9 @@ function addPin(lat, lon, popupText, linkUrl, linkText) {
 } 
 
 var incidents = [
-    {popupText: "penis", linkUrl: "https://file-examples.com/storage/fefda3519566d3360a0efb3/2017/11/file_example_MP3_700KB.mp3" ,
+    {popupText: "Johnson", linkUrl: "https://file-examples.com/storage/fefda3519566d3360a0efb3/2017/11/file_example_MP3_700KB.mp3" ,
     linkText: "audio file", lat: 40.4233, lon: -104.7091},
-    {popupText: "penis2", linkUrl: "https://www.biolifesummits.com/", linkText: "biolife", lat: 40.4300, lon: -104.7100},
+    {popupText: "Johnson", linkUrl: "https://www.biolifesummits.com/", linkText: "biolife", lat: 40.4300, lon: -104.7100},
     {linkText: "Bowser got peach and is driving 90mph on the freeway", lat: 40.4400, lon: -104.7200},
     {description: "Smoke detector set off", lat: 40.4600, lon: -104.6990},
     {description: "Fire reported in backyard barn", lat: 40.4200, lon: -104.7100},
