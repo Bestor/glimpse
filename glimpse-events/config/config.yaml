@@ -1,0 +1,21 @@
+feeds:
+  - name: Feed1
+    url: "https://audio.broadcastify.com/32602.mp3"
+    provider: broadcastify
+
+write_path: ./output
+
+providers:
+  broadcastify:
+    user: "${BROADCASTIFY_USER}"
+    password: "${BROADCASTIFY_PASSWORD}"
+
+openai:
+  project: proj_UeXGDR7tqevRJ8dMKHKhjb2w
+  api_key: "${OPENAI_API_KEY}" 
+
+models:
+  whisper:
+    # ["tiny", "base", "small", "medium", "large"]
+    # append .en to use english-only
+    size: "medium.en"

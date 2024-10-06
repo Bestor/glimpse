@@ -1,0 +1,31 @@
+services:
+  listener:
+    build: ./glimpse-listener
+    command: /glimpse-listener/src/main.py
+    #command: -c "import time; time.sleep(1000000000)"
+    entrypoint: python
+    env_file:
+      - .env
+    working_dir: /glimpse-listener
+    volumes:
+      - ./glimpse-listener:/glimpse-listener
+      - ./.cache/whisper/:/root/.cache/whisper/
+    networks:
+      - glimpse
+  api:
+    build: ./glimpse-api
+    command: run main.go
+    entrypoint: go
+    env_file:
+      - .env
+    working_dir: /glimpse
+    volumes:
+      - ./glimpse-api:/glimpse
+    ports:
+      - "8080:8080"
+    networks:
+      - glimpse
+
+networks:
+  glimpse:
+    name: glimpse

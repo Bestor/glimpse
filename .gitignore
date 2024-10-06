@@ -1,0 +1,6 @@
+*.env
+*test.db*
+*.pyc
+*__pycache__/*
+.cache/*
+glimpse-listener/output/*

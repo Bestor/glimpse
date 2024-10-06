@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrollable Map with Pins</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="map"></div>
+    <div></div>
+ 
+    <!-- Form for adding pins -->
+    <div id="form-container">
+        <h3>Add a Pin</h3>
+        <form id="pin-form">
+
+            <button type="submit">Add Pin</button>
+        </form>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="./SmoothWheelZoom/SmoothWheelZoom.js"></script>
+    <script src="./QueryString/querystring.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
