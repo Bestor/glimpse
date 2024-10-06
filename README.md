@@ -33,3 +33,8 @@ It stores all events in the API
 ### UI
 
 The UI is a simple map for displaying the events backed by leaflet. I would like to improve this to be a more functional UI using react to be able to browse through radio feeds/transcriptions
+
+
+# Contributing
+
+At the time of writing (10/2024) the contribution is very simple. I often push to main for fast iteration. Long term I'll probably use github actions to run a test suite on PRs and set up linting. Will promote forks for PRs.
