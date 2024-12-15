@@ -1,16 +1,14 @@
 import argparse
 from config import load_config
 from core import aggregate, geocode
-from api_handler import API
-import json
 from datetime import datetime, timezone
 from glimpse_api_client.glimpse_api_client import Client, models
 from glimpse_api_client.glimpse_api_client.api.default import post_events
 from glimpse_api_client.glimpse_api_client.api.default import get_transcriptions
+from http import HTTPStatus
 
 import time
 import os
-import requests
 
 POLLING_INTERVAL = 10 # Time in seconds between each poll
 
@@ -78,6 +76,8 @@ def main(args):
                             client=client,
                             body=event
                         )
+                            if response.status_code == HTTPStatus.OK:
+                                raise Exception(f"Error: {response.status_code} - {response.content}")
                         print(f"RESPONSE: {response}")
                         event = NEW_EVENT
 

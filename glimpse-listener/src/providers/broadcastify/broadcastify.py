@@ -66,7 +66,7 @@ def process(feed, audio_model, writer, energy_threshold=1000, phrase_timeout=3):
     """
     args:
         feed_url: BroadcastifyFeed object 
-        audio_model: an instantiated whsiper model
+        audio_model: an instantiated whisper model
         energy_threshold: Energy level required for recording to start
         phrase_timeout: How much empty space exists in the stream before it gets counted as a new transcription 
     """

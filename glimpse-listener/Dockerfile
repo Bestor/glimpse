@@ -17,6 +17,7 @@ RUN pip install --upgrade attrs
 
 RUN pip install python-dateutil
 RUN pip install pydub
+RUN pip install boto3
 
 
 RUN apk add ffmpeg

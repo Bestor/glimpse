@@ -4,6 +4,9 @@ import os
 from glimpse_api_client.glimpse_api_client import Client, models
 from glimpse_api_client.glimpse_api_client.api.default import post_transcriptions
 import datetime
+from tempfile import TemporaryDirectory
+import boto3
+
 class TranscribedChunk():
     def __init__(self, audio_chunk, transcription_text, time):
         self.audio_chunk = audio_chunk
@@ -33,11 +36,31 @@ def write_wave(path, audio, sample_rate):
 
     Takes path, PCM audio data, and sample rate.
     """
+
     with contextlib.closing(wave.open(path, 'wb')) as wf:
         wf.setnchannels(1)
         wf.setsampwidth(2)
         wf.setframerate(sample_rate)
         wf.writeframes(audio)
+    
+
+
+def write_wave_to_s3(s3_bucket, audio, sample_rate):
+    """Writes a .wav file to an s3-compatible object store.
+
+    Takes s3 bucket object, path, PCM audio data, and sample rate.
+    """
+    with TemporaryDirectory() as temp_dir:
+        temp_path = os.path.join(temp_dir, "temp.wav")
+        with contextlib.closing(wave.open(temp_path, 'wb')) as wf:
+            wf.setnchannels(1)
+            wf.setsampwidth(2)
+            wf.setframerate(sample_rate)
+            wf.writeframes(audio)
+
+        s3_bucket.write(temp_path, temp_path)
+
+
 
 class Writer():
     def __init__(self, name, base_path):
@@ -53,8 +76,8 @@ class Writer():
         write_wave(audio_file_path, transcribed_chunk.audio_chunk.audio, transcribed_chunk.audio_chunk.sample_rate)
     
 class APIWriter(Writer):
-    def __init__(self, name, base_path):
-        super().__init__(name, base_path)
+    def __init__(self, s3_bucket):
+        self.s3_bucket = s3_bucket
 
     def handle_transcription(self, transcribed_chunk):
 
@@ -63,10 +86,8 @@ class APIWriter(Writer):
             return
 
 
-        dest_path = os.path.join(self.base_path, self.name, transcribed_chunk.time.isoformat())
-        os.makedirs(dest_path)
-        audio_file_path = os.path.join(dest_path, "audio.wav")
-        write_wave(audio_file_path, transcribed_chunk.audio_chunk.audio, transcribed_chunk.audio_chunk.sample_rate)
+        
+        write_wave_to_s3(self.s3_bucket, transcribed_chunk.audio_chunk.audio, transcribed_chunk.audio_chunk.sample_rate)
 
         transcription = models.Transcription(content=transcribed_chunk.text, audio=audio_file_path, timestamp=datetime.datetime.now(datetime.UTC))
         
