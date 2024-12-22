@@ -19,7 +19,7 @@ const App = () => {
     zoom={10}
     zoomControl={false}
     renderer={L.canvas()}
-
+    scrollWheelZoom={false} // TODO: WTF
     smoothWheelZoom={true}
     smoothSensitivity={10}
   >
