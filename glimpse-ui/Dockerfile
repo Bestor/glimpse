@@ -14,3 +14,8 @@ RUN npm install react-leaflet@next
 RUN npm install -D @types/leaflet
 RUN npm install @mui/joy @emotion/react @emotion/styled 
 RUN npm install @fontsource/inter
+
+# To install joy ui
+RUN npm install @mui/joy @emotion/react @emotion/styled
+RUN npm install @mui/material @emotion/react @emotion/styled
+RUN npm install @mui/icons-material
